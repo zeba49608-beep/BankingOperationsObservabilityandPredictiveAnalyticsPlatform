@@ -1,54 +1,28 @@
-# BankingOperationsObservabilityandPredictiveAnalyticsPlatform
-# Banking Operations Observability and Predictive Analytics Platform
+# Banking Incident Classification: v1
 
-A machine learning system that predicts banking infrastructure failures, automatically analyzes incidents, and provides actionable insights.
+Can critical incident hours be detected from operational KPIs, and does the previous hour give early warning?
 
-## Quick Start
+## Results
+All numbers are computed in `src/metrics.py` and checked by `tests/test_metrics.py`.
 
-git clone https://github.com/zeba49608-beep/BankingOperationsObservabilityandPredictiveAnalyticsPlatform.git
-cd banking-observability-capstone
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-streamlit run frontend/dashboard.py
-
- 
-
-## Project Structure
-
-- notebooks/ - Jupyter notebooks for analysis and modeling
-- backend/ - FastAPI application
-- frontend/ - Streamlit dashboard
-- data/ - Data source instructions
-- docs/ - Documentation
+- Same-hour detection is perfect (F1 = 1.000). A single KPI threshold separates the labels, so the labels appear rule-based.
+- Early warning is weak. The best lagged model catches 3 of 9 critical test hours (precision 0.214, recall 0.333, F1 0.261), with 11 false alarms.
 
 ## Data
+Place `incident_reports.csv` and `infrastructure_metrics.csv` in `data/`. The data is not committed to the repo.
 
-Download from: [Google Drive Link](https://drive.google.com/drive/folders/1BCVnbRWzFoITE-88KGH51Zd8kusq-A50)
+## Run
+```bash
+pip install -r requirements.txt
+pytest -q
+streamlit run app.py
+```
 
-Extract to `data/` folder.
+## Limitations
+- One week of hourly data.
+- Labels appear derived from thresholds on the same KPIs.
+- 26 critical hours in total, 9 in the test set.
+- The two source files disagree at every critical hour. v1 uses the incident file only.
 
-## Technologies
-
-- Python 3.10+
-- Scikit-learn
-- Streamlit, FastAPI
-- Docker
-- Pandas, NumPy
-
-## Documentation
-
-- `Zeba_Capstone_Proposal.md` - Project proposal
-- `docs/TECHNICAL_DOCUMENTATION.md` - Architecture
-- `docs/RESULTS_SUMMARY.md` - Results
-
-## Author
-
-Zeba Khan 
-FullStack Academy AI/ML Capstone  
-Cohort 2605-FTB-CT-AIM-PT
-
-## Status
-
-In Progress
-
+## Not included in v1
+Minute-level anomaly detection, log clustering, RAG, FastAPI, Docker.
