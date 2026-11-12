@@ -51,8 +51,9 @@ def separation_table(inc):
 
 
 def file_mismatch(inc, infra):
-    joined = inc.set_index("timestamp").join(
-        infra.set_index("timestamp")[["neft_success_rate"]], rsuffix="_infra", how="inner")
+    infra_neft = (infra.set_index("timestamp")[["neft_success_rate"]]
+                .rename(columns={"neft_success_rate": "neft_success_rate_infra"}))
+    joined = inc.set_index("timestamp").join(infra_neft, how="inner")
     match = (joined["neft_success_rate"] - joined["neft_success_rate_infra"]).abs() < 0.01
     critical = joined[TARGET] == 1
     return {
